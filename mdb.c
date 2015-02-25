@@ -3334,7 +3334,7 @@ mdb_env_map(MDB_env *env, void *addr, int newsize)
 		env->me_map = NULL;
 		return ErrCode();
 	}
-
+	if( flags & MDB_SEQUENTIAL ) { posix_madvise(env->me_map, env->me_mapsize, POSIX_MADV_SEQUENTIAL); }
 	if (flags & MDB_NORDAHEAD) {
 		/* Turn off readahead. It's harmful when the DB is larger than RAM. */
 #ifdef MADV_RANDOM
@@ -3983,7 +3983,7 @@ fail:
 	 */
 #define	CHANGEABLE	(MDB_NOSYNC|MDB_NOMETASYNC|MDB_MAPASYNC|MDB_NOMEMINIT)
 #define	CHANGELESS	(MDB_FIXEDMAP|MDB_NOSUBDIR|MDB_RDONLY|MDB_WRITEMAP| \
-	MDB_NOTLS|MDB_NOLOCK|MDB_NORDAHEAD)
+	MDB_NOTLS|MDB_NOLOCK|MDB_NORDAHEAD|MDB_SEQUENTIAL)
 
 int
 mdb_env_open(MDB_env *env, const char *path, unsigned int flags, mdb_mode_t mode)
