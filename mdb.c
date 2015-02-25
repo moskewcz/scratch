@@ -3334,6 +3334,7 @@ mdb_env_map(MDB_env *env, void *addr, int newsize)
 		env->me_map = NULL;
 		return ErrCode();
 	}
+	flags |= MDB_SEQUENTIAL; // HACK -- globally force-enable this for testing
 	if( flags & MDB_SEQUENTIAL ) { posix_madvise(env->me_map, env->me_mapsize, POSIX_MADV_SEQUENTIAL); }
 	if (flags & MDB_NORDAHEAD) {
 		/* Turn off readahead. It's harmful when the DB is larger than RAM. */
